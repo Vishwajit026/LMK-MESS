@@ -3,7 +3,7 @@ import { Typography, Box, Avatar, Button } from '@mui/material';
 import { Whatshot as TrendingIcon, Stars as StarIcon } from '@mui/icons-material';
 
 const trendingTopics = [
-  { tag: '#TaskPlanet', posts: '1.4k posts' },
+  { tag: '#MiniSocial', posts: '1.4k posts' },
   { tag: '#Launch2026', posts: '890 posts' },
   { tag: '#ReactJS', posts: '640 posts' },
   { tag: '#WebDev', posts: '520 posts' },

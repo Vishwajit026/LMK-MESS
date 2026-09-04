@@ -82,7 +82,7 @@ const Header = ({ onOpenCreateModal, darkMode, setDarkMode, searchQuery, setSear
                 fontSize: { xs: '18px', sm: '20px' }
               }}
             >
-              TaskPlanet
+              Mini-Social
             </Typography>
             <Typography
               variant="caption"

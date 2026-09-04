@@ -140,7 +140,7 @@ const AuthModal = () => {
             🪐
           </Box>
           <Typography variant="h6" sx={{ fontWeight: 800, fontSize: '18px' }}>
-            TaskPlanet
+            Mini-Social
           </Typography>
         </Box>
         <IconButton size="small" onClick={closeAuthModal} sx={{ color: 'var(--text-muted)' }}>
@@ -211,7 +211,7 @@ const AuthModal = () => {
                 '&:hover': { background: '#1d4ed8' }
               }}
             >
-              {loading ? <CircularProgress size={20} color="inherit" /> : 'Sign In to TaskPlanet'}
+              {loading ? <CircularProgress size={20} color="inherit" /> : 'Sign In to Mini-Social'}
             </Button>
           </form>
         ) : (

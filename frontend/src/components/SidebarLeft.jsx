@@ -14,7 +14,7 @@ const SidebarLeft = ({ activeCategory, setActiveCategory, onOpenCreateModal }) =
 
   const navItems = [
     { label: 'Community Feed', icon: <FeedIcon fontSize="small" />, tag: 'all' },
-    { label: '#TaskPlanet', icon: <ExploreIcon fontSize="small" />, tag: '#TaskPlanet' },
+    { label: '#MiniSocial', icon: <ExploreIcon fontSize="small" />, tag: '#MiniSocial' },
     { label: '#tech & code', icon: <CommunityIcon fontSize="small" />, tag: '#tech' },
     { label: '#milestones', icon: <TasksIcon fontSize="small" />, tag: '#milestone' },
     { label: '#lifestyle', icon: <BookmarkIcon fontSize="small" />, tag: '#lifestyle' }
@@ -58,7 +58,7 @@ const SidebarLeft = ({ activeCategory, setActiveCategory, onOpenCreateModal }) =
                 px: 1
               }}
             >
-              {user?.bio || 'TaskPlanet Creator 🚀'}
+              {user?.bio || 'Mini-Social Creator 🚀'}
             </Typography>
 
             <Divider sx={{ my: 1.5, borderColor: 'var(--border-light)' }} />
@@ -100,7 +100,7 @@ const SidebarLeft = ({ activeCategory, setActiveCategory, onOpenCreateModal }) =
               🪐
             </Box>
             <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>
-              Join TaskPlanet
+              Join Mini-Social
             </Typography>
             <Typography variant="body2" sx={{ color: 'var(--text-secondary)', fontSize: '12.5px', my: 1 }}>
               Create an account to post updates, like posts, and connect with other users!

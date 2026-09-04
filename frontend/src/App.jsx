@@ -336,7 +336,7 @@ const App = () => {
                 <Typography variant="body2" sx={{ color: 'var(--text-muted)', maxWidth: 360 }}>
                   {activeCategory !== 'all' || selectedCreator || searchQuery
                     ? 'No posts matched your current filter criteria. Try clearing filters or searching for something else.'
-                    : 'Be the first one to share a post with the TaskPlanet community!'}
+                    : 'Be the first one to share a post with the Mini-Social community!'}
                 </Typography>
                 {(activeCategory !== 'all' || selectedCreator || searchQuery) && (
                   <Button
@@ -361,14 +361,14 @@ const App = () => {
           <SidebarRight onTagClick={handleTagClick} />
         </main>
 
-        {/* TaskPlanet App Mobile Bottom Navigation */}
+        {/* Mini-Social App Mobile Bottom Navigation */}
         <BottomNav
           onOpenCreateModal={() => setCreateModalOpen(true)}
           activeTab={mobileTab}
           setActiveTab={(tab) => {
             setMobileTab(tab);
             if (tab === 'feed') handleClearFilters();
-            if (tab === 'explore') setActiveCategory('#TaskPlanet');
+            if (tab === 'explore') setActiveCategory('#MiniSocial');
           }}
         />
 

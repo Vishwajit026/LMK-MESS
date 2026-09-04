@@ -26,13 +26,13 @@ import confetti from 'canvas-confetti';
 import { useAuth } from '../context/AuthContext';
 import { postAPI } from '../services/api';
 
-const tagsList = ['#TaskPlanet', '#general', '#tech', '#lifestyle', '#milestone', '#updates'];
+const tagsList = ['#MiniSocial', '#general', '#tech', '#lifestyle', '#milestone', '#updates'];
 
 const CreatePostCard = ({ onPostCreated }) => {
   const { user, isAuthenticated, openAuthModal } = useAuth();
   const [text, setText] = useState('');
   const [image, setImage] = useState('');
-  const [selectedTag, setSelectedTag] = useState('#TaskPlanet');
+  const [selectedTag, setSelectedTag] = useState('#MiniSocial');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [urlModalOpen, setUrlModalOpen] = useState(false);
@@ -99,7 +99,7 @@ const CreatePostCard = ({ onPostCreated }) => {
       if (res.success) {
         setText('');
         setImage('');
-        setSelectedTag('#TaskPlanet');
+        setSelectedTag('#MiniSocial');
         if (fileInputRef.current) fileInputRef.current.value = '';
 
         // Trigger celebratory confetti
@@ -137,7 +137,7 @@ const CreatePostCard = ({ onPostCreated }) => {
             placeholder={
               isAuthenticated
                 ? `What's on your mind, ${user?.name?.split(' ')[0]}? Share an update or photo...`
-                : 'Sign in to share your thoughts with the TaskPlanet community...'
+                : 'Sign in to share your thoughts with the Mini-Social community...'
             }
             value={text}
             onChange={(e) => {
