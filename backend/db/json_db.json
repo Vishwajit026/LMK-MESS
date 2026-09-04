@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "_id": "admin_1780196424628",
+      "name": "KPC Admin",
+      "email": "admin@kpcventures.in",
+      "password": "$2a$10$LZAlZ176IcgbJJhpeSIyLODLQbZfCnna/hlY4ywRYQA8owCI1whv6",
+      "role": "admin",
+      "createdAt": "2026-05-31T03:00:24.628Z"
+    }
+  ],
+  "leads": [],
+  "blogs": []
+}
