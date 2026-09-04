@@ -206,6 +206,12 @@ npm run dev
    - `VITE_API_URL`: `https://taskplanet-api.onrender.com/api`
 5. Click **Deploy**.
 
+## 🌐 Live Production Deployments
+
+- 🚀 **Live Frontend (Vercel)**: [https://mini-social-frontend-topaz.vercel.app](https://mini-social-frontend-topaz.vercel.app)
+- 📡 **Live Backend API (Render)**: [https://mini-social-backend-9ys5.onrender.com](https://mini-social-backend-9ys5.onrender.com)
+- 🐙 **GitHub Repository**: [https://github.com/Vishwajit026/Mini-social](https://github.com/Vishwajit026/Mini-social)
+
 ---
 
 ## 🎯 Demo Login Credentials
