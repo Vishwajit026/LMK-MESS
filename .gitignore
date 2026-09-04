@@ -18,8 +18,9 @@ yarn-error.log*
 pnpm-debug.log*
 *.log
 
-# OS Files
-.DS_Store
+# Other projects / submodules
+webshield/
+
 Thumbs.db
 .vscode/
 .idea/
