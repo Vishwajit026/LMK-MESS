@@ -1,0 +1,48 @@
+================================================================================
+                    TASK 1: MINI SOCIAL POST APPLICATION
+                            SUBMISSION DOCUMENT
+================================================================================
+
+1. PROJECT LINKS
+--------------------------------------------------------------------------------
+• Live Frontend Application (Vercel):
+  https://mini-social-frontend-topaz.vercel.app
+
+• Live Backend API (Render):
+  https://mini-social-backend-9ys5.onrender.com
+
+• Public GitHub Repository:
+  https://github.com/Vishwajit026/Mini-social
+
+• MongoDB Database Connection:
+  Database: MongoDB Atlas (Mongoose ODM)
+  Collections Used: 2 (users, posts)
+  Connection URI: mongodb+srv://taskplanet_admin:TaskPlanet2026!Secure@cluster0.plbrcr3.mongodb.net/taskplanet_social?retryWrites=true&w=majority
+
+
+
+2. TEST / DEMO CREDENTIALS
+--------------------------------------------------------------------------------
+You can use the 1-Click login buttons in the Sign In modal or:
+• Email: aarav@taskplanet.app
+• Password: Password123!
+
+
+3. TECH STACK
+--------------------------------------------------------------------------------
+• Frontend: React.js (Vite), Material UI (MUI), Emotion, Pure CSS (No TailwindCSS)
+• Backend: Node.js, Express.js, JSON Web Tokens (JWT), Bcrypt.js, CORS
+• Database: MongoDB (Strictly 2 collections: `users` and `posts`)
+• Cloud Hosting: Vercel (Frontend), Render (Backend), MongoDB Atlas (Database)
+
+
+4. FEATURES IMPLEMENTED
+--------------------------------------------------------------------------------
+1. Account Creation: JWT-based Signup & Login with password hashing and 1-click test accounts.
+2. Create Post: Post text, uploaded images (file or URL), or both (neither is mandatory alone).
+3. Public Social Feed: 3-column responsive layout, story highlights reel, and hashtag filters.
+4. Instant Likes & Likers Dialog: Optimistic heart toggle with live counter and modal showing all users who liked a post.
+5. Interactive Comments: Threaded comments with author relative timestamps and deletion permissions.
+6. Responsive & Dark Mode: TaskPlanet-inspired mobile bottom navigation bar and Dark/Light mode theme switch.
+7. Code Quality: Clean modular architecture, separate frontend/backend folders, comprehensive documentation.
+================================================================================

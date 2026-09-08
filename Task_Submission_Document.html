@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task 1: Mini Social Post Application - Submission Document</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: #1e293b;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      color: #2563eb;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+      font-size: 24px;
+    }
+    h2 {
+      color: #334155;
+      margin-top: 24px;
+      font-size: 18px;
+    }
+    .link-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .link-item {
+      margin-bottom: 10px;
+    }
+    .link-title {
+      font-weight: bold;
+      color: #475569;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .link-url {
+      font-size: 15px;
+      color: #2563eb;
+      word-break: break-all;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🪐 Task 1: Mini Social Post Application — Submission Document</h1>
+
+  <h2>1. Project Links</h2>
+  <div class="link-box">
+    <div class="link-item">
+      <div class="link-title">🚀 Live Frontend Application (Vercel):</div>
+      <div class="link-url"><a href="https://mini-social-frontend-topaz.vercel.app" target="_blank">https://mini-social-frontend-topaz.vercel.app</a></div>
+    </div>
+    <div class="link-item">
+      <div class="link-title">📡 Live Backend API (Render):</div>
+      <div class="link-url"><a href="https://mini-social-backend-9ys5.onrender.com" target="_blank">https://mini-social-backend-9ys5.onrender.com</a></div>
+    </div>
+    <div class="link-item">
+      <div class="link-title">🐙 Public GitHub Repository:</div>
+      <div class="link-url"><a href="https://github.com/Vishwajit026/Mini-social" target="_blank">https://github.com/Vishwajit026/Mini-social</a></div>
+    </div>
+    <div class="link-item">
+      <div class="link-title">🍃 Database:</div>
+      <div style="font-size: 14px; color: #475569;">MongoDB Atlas (Strictly 2 collections: <code>users</code> &amp; <code>posts</code>)</div>
+    </div>
+  </div>
+
+  <h2>2. Quick Test / Demo Credentials</h2>
+  <div class="link-box">
+    <div><strong>Email:</strong> <code>aarav@taskplanet.app</code></div>
+    <div><strong>Password:</strong> <code>Password123!</code></div>
+    <div style="margin-top: 6px; font-size: 13px; color: #64748b;">(Or use the 1-Click quick login buttons in the Sign In modal)</div>
+  </div>
+
+  <h2>3. Tech Stack</h2>
+  <ul>
+    <li><strong>Frontend:</strong> React.js (Vite), Material UI (MUI), Emotion, Custom CSS (<span class="badge">No TailwindCSS</span>)</li>
+    <li><strong>Backend:</strong> Node.js, Express.js, JWT Auth, Bcrypt.js, CORS</li>
+    <li><strong>Database:</strong> MongoDB (Mongoose ODM — exactly 2 collections: <code>users</code> and <code>posts</code>)</li>
+    <li><strong>Deployment:</strong> Vercel (Frontend), Render (Backend), MongoDB Atlas (Database)</li>
+  </ul>
+
+  <h2>4. Features Implemented</h2>
+  <ul>
+    <li><strong>Authentication:</strong> Secure signup &amp; login with password hashing and JWT persistence.</li>
+    <li><strong>Create Post:</strong> Post text, upload image files with preview or insert image URLs, or both.</li>
+    <li><strong>Social Feed:</strong> 3-column desktop layout + TaskPlanet-inspired mobile bottom navigation bar.</li>
+    <li><strong>Likes &amp; Comments:</strong> Instant heart toggle, likers modal, and real-time comment threads.</li>
+    <li><strong>Theme:</strong> Dark Mode and Light Mode with seamless switching.</li>
+  </ul>
+
+</body>
+</html>

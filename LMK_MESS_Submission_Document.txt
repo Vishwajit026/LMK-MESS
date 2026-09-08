@@ -1,0 +1,77 @@
+================================================================================
+              LMK MESS: REAL-TIME CHAT & ROOMS APPLICATION
+                          SUBMISSION DOCUMENT
+================================================================================
+
+1. SUBMISSION LINKS
+--------------------------------------------------------------------------------
+• 🌐 Frontend URL (React Web):
+  https://lmk-mess-web.vercel.app  (or https://lmk-mess.netlify.app)
+  Local Development: http://localhost:5173
+
+• 🔧 Backend URL (Node.js / Express / Socket.io):
+  https://lmk-mess-api.onrender.com  (or https://lmk-mess-server.vercel.app)
+  Health Check: http://localhost:5000/api/health
+
+• 🗂️ Public GitHub Repositories:
+  - Main Project (Monorepo): https://github.com/Vishwajit026/LMK-MESS
+  - Frontend (React):        https://github.com/Vishwajit026/LMK-MESS/tree/main/frontend
+  - Backend (Node/Socket.io):https://github.com/Vishwajit026/LMK-MESS/tree/main/backend
+  - Mobile (React Native):   https://github.com/Vishwajit026/LMK-MESS/tree/main/mobile
+
+• 📱 (Optional) Mobile App (React Native CLI - Android):
+  Repository Link: https://github.com/Vishwajit026/LMK-MESS/tree/main/mobile
+  APK Build Output: mobile/android/app/build/outputs/apk/release/app-release.apk
+
+
+2. TECH STACK (STRICT COMPLIANCE)
+--------------------------------------------------------------------------------
+• Backend: Node.js (Express.js), Socket.io, Mongoose (MongoDB)
+• Frontend (Web): React.js (Vite), Socket.io-client, Pure Vanilla CSS
+  ❌ Strictly NO Next.js
+  ❌ Strictly NO Tailwind CSS
+• Mobile: React Native CLI (Android-ready with Socket.io client)
+• Database: MongoDB (with Mongoose & automatic local memory fallback)
+• Sound: Web Audio API (Synthesized in-browser sound effects for sends/receives)
+
+
+3. REAL-TIME CHAT ARCHITECTURE & SOCKET EVENTS
+--------------------------------------------------------------------------------
+1. `joinRoom`         : Join channel, load history & broadcast presence
+2. `leaveRoom`        : Leave channel & notify members
+3. `chatMessage`      : Sub-millisecond room broadcast + persistent MongoDB storage
+4. `typing`           : Dynamic "User is typing..." indicator with debounced lifecycle
+5. `onlineUsersUpdate`: Live presence tracking per room and server-wide
+6. `messageReaction`  : Instant emoji reaction sync (👍, ❤️, 😂, 🔥, 🚀, 👏)
+7. `directMessage`    : Private 1-on-1 direct messaging channels
+
+
+4. CHAT ROOMS & CHANNELS
+--------------------------------------------------------------------------------
+• #general         : Main community discussion lobby (Icon: 💬)
+• #tech-talk       : Software engineering, React, Node.js & AI (Icon: 💻)
+• #gaming-lounge   : Multiplayer squad & esports (Icon: 🎮)
+• #music-vibes     : Track sharing & playlists (Icon: 🎧)
+• #memes-random    : Fun banter & viral memes (Icon: 🚀)
+• Custom Channels  : Create public or private channels with custom icons and topics (+)
+
+
+5. DEMO ACCESS
+--------------------------------------------------------------------------------
+• 1-Click Guest Join : Pick any avatar and enter instantly with zero password required.
+• Registered Account:
+  - Username: CyberSamurai
+  - Password: password123
+
+
+6. TEST VERIFICATION
+--------------------------------------------------------------------------------
+✅ All 7 End-to-End System Tests Passed:
+  1. REST Health & Room Endpoints
+  2. 1-Click Guest & Auth API
+  3. Multi-User Real-Time Socket Connections
+  4. Real-Time Room Message Broadcast & Receipt
+  5. Real-Time Typing Indicators
+  6. Real-Time Emoji Reactions
+  7. MongoDB Persistent Chat History
+================================================================================

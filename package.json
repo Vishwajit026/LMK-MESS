@@ -1,15 +1,15 @@
 {
-  "name": "taskplanet-social-app",
-  "version": "1.0.0",
-  "description": "Mini Social Post Application inspired by TaskPlanet App",
+  "name": "lmk-mess-realtime-chat",
+  "version": "2.0.0",
+  "description": "LMK MESS — Modern Real-Time Chat & Rooms Application built with Node.js, Express, Socket.io, React, MongoDB, and React Native CLI",
   "private": true,
   "scripts": {
-    "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && node server.js",
+    "dev:frontend": "cd frontend && pnpm run dev",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "build:frontend": "cd frontend && npm run build",
+    "build:frontend": "cd frontend && pnpm run build",
     "build": "npm run build:frontend",
-    "seed": "cd backend && npm run seed"
+    "test:chat": "node backend/test_chat_suite.js"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

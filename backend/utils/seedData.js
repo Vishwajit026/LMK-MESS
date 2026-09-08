@@ -1,203 +1,129 @@
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
+const Room = require('../models/Room');
+const Message = require('../models/Message');
 const User = require('../models/User');
-const Post = require('../models/Post');
-
-dotenv.config();
-
-const sampleUsers = [
-  {
-    name: 'Aarav Sharma',
-    username: 'aarav_sharma',
-    email: 'aarav@taskplanet.app',
-    password: 'Password123!',
-    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80',
-    bio: 'Product Designer & TaskPlanet Community Star 🌟'
-  },
-  {
-    name: 'Priya Patel',
-    username: 'priya_tech',
-    email: 'priya@taskplanet.app',
-    password: 'Password123!',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
-    bio: 'Fullstack Dev & Tech writer. Love building clean web apps 💻'
-  },
-  {
-    name: 'Rohan Verma',
-    username: 'rohan_v',
-    email: 'rohan@taskplanet.app',
-    password: 'Password123!',
-    avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=200&q=80',
-    bio: 'Freelancer & Digital nomad. Exploring new horizons 🚀'
-  },
-  {
-    name: 'Sneha Reddy',
-    username: 'sneha_creates',
-    email: 'sneha@taskplanet.app',
-    password: 'Password123!',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80',
-    bio: 'UI/UX Enthusiast. Designing modern user experiences 🎨'
-  }
-];
 
 const seedDatabase = async () => {
   try {
-    const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/taskplanet_social';
-    if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(mongoUri);
-    }
-
-    console.log('🌱 Checking database seed state...');
-
-    const userCount = await User.countDocuments();
-    if (userCount > 0) {
-      console.log(`ℹ️ Database already contains ${userCount} users. Skipping destructive seed.`);
+    const roomCount = await Room.countDocuments();
+    if (roomCount > 0) {
+      console.log('📦 Database already populated with chat rooms.');
       return;
     }
 
-    console.log('🌱 Seeding initial TaskPlanet community users and posts...');
+    console.log('🌱 Seeding initial chat rooms and messages for LMK MESS...');
 
-    // Create users
-    const createdUsers = [];
-    for (const u of sampleUsers) {
-      const newUser = await User.create(u);
-      createdUsers.push(newUser);
+    // Seed default bot user
+    let botUser = await User.findOne({ username: 'LMK Bot 🤖' });
+    if (!botUser) {
+      botUser = await User.create({
+        username: 'LMK Bot 🤖',
+        password: 'password123',
+        avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=LMKBot&backgroundColor=6366f1',
+        bio: 'Official LMK MESS Assistant Bot ✨',
+        status: 'online',
+        isGuest: false
+      });
     }
 
-    console.log(`✅ Created ${createdUsers.length} sample users`);
-
-    // Sample posts
-    const samplePosts = [
+    const defaultRooms = [
       {
-        user: createdUsers[0]._id,
-        username: createdUsers[0].username,
-        name: createdUsers[0].name,
-        userAvatar: createdUsers[0].avatar,
-        text: 'Excited to announce the new TaskPlanet Social Page launch! 🚀 Connect with fellow creators, share your daily milestones, and collaborate in real-time. What are your thoughts on this sleek new design? #TaskPlanet #Community #Launch',
-        image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-        tag: '#TaskPlanet',
-        likes: [
-          {
-            userId: createdUsers[1]._id,
-            username: createdUsers[1].username,
-            name: createdUsers[1].name
-          },
-          {
-            userId: createdUsers[2]._id,
-            username: createdUsers[2].username,
-            name: createdUsers[2].name
-          },
-          {
-            userId: createdUsers[3]._id,
-            username: createdUsers[3].username,
-            name: createdUsers[3].name
-          }
-        ],
-        comments: [
-          {
-            userId: createdUsers[1]._id,
-            username: createdUsers[1].username,
-            name: createdUsers[1].name,
-            userAvatar: createdUsers[1].avatar,
-            text: 'Looks absolutely stunning! Love the smooth transitions and modern colors. 🔥'
-          },
-          {
-            userId: createdUsers[3]._id,
-            username: createdUsers[3].username,
-            name: createdUsers[3].name,
-            userAvatar: createdUsers[3].avatar,
-            text: 'Super clean UI! Very intuitive to create and like posts.'
-          }
-        ]
+        name: 'General',
+        slug: 'general',
+        description: 'The main lobby for everyone on LMK MESS. Say hi and connect!',
+        topic: 'Community & Hangout',
+        icon: '💬',
+        isPrivate: false,
+        createdBy: 'LMK Bot 🤖',
+        lastMessage: {
+          text: 'Welcome to LMK MESS! Enjoy real-time chatting.',
+          sender: 'LMK Bot 🤖',
+          timestamp: new Date()
+        }
       },
       {
-        user: createdUsers[1]._id,
-        username: createdUsers[1].username,
-        name: createdUsers[1].name,
-        userAvatar: createdUsers[1].avatar,
-        text: 'Morning coffee + clean React & Node.js architecture = the ultimate flow state ☕💻 Working on some exciting features today! #devlife #coding #reactjs',
-        image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
-        tag: '#coding',
-        likes: [
-          {
-            userId: createdUsers[0]._id,
-            username: createdUsers[0].username,
-            name: createdUsers[0].name
-          },
-          {
-            userId: createdUsers[3]._id,
-            username: createdUsers[3].username,
-            name: createdUsers[3].name
-          }
-        ],
-        comments: [
-          {
-            userId: createdUsers[2]._id,
-            username: createdUsers[2].username,
-            name: createdUsers[2].name,
-            userAvatar: createdUsers[2].avatar,
-            text: 'That setup looks super clean! Best of luck with the build 🚀'
-          }
-        ]
+        name: 'Tech Talk',
+        slug: 'tech-talk',
+        description: 'Discussions on full-stack development, AI, Node.js, React, and tech innovations.',
+        topic: 'Engineering & Tech',
+        icon: '💻',
+        isPrivate: false,
+        createdBy: 'LMK Bot 🤖',
+        lastMessage: {
+          text: 'What is your favorite modern tech stack in 2026?',
+          sender: 'LMK Bot 🤖',
+          timestamp: new Date()
+        }
       },
       {
-        user: createdUsers[2]._id,
-        username: createdUsers[2].username,
-        name: createdUsers[2].name,
-        userAvatar: createdUsers[2].avatar,
-        text: 'Quick tip for developers building social feeds: Always optimize your pagination with indexed timestamps for lightning-fast queries! ⚡ #tips #webdev #performance',
-        image: '',
-        tag: '#tips',
-        likes: [
-          {
-            userId: createdUsers[0]._id,
-            username: createdUsers[0].username,
-            name: createdUsers[0].name
-          }
-        ],
-        comments: []
+        name: 'Gaming Lounge',
+        slug: 'gaming-lounge',
+        description: 'Multiplayer squad search, game recommendations, and esports hype.',
+        topic: 'Games & Esports',
+        icon: '🎮',
+        isPrivate: false,
+        createdBy: 'LMK Bot 🤖',
+        lastMessage: {
+          text: 'Anyone up for a quick session tonight?',
+          sender: 'LMK Bot 🤖',
+          timestamp: new Date()
+        }
       },
       {
-        user: createdUsers[3]._id,
-        username: createdUsers[3].username,
-        name: createdUsers[3].name,
-        userAvatar: createdUsers[3].avatar,
-        text: 'Beautiful sunset vibes while testing the mobile app layout 🌅 Stay focused and keep building amazing things!',
-        image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
-        tag: '#lifestyle',
-        likes: [
-          {
-            userId: createdUsers[1]._id,
-            username: createdUsers[1].username,
-            name: createdUsers[1].name
-          },
-          {
-            userId: createdUsers[2]._id,
-            username: createdUsers[2].username,
-            name: createdUsers[2].name
-          }
-        ],
-        comments: []
+        name: 'Music & Vibes',
+        slug: 'music-vibes',
+        description: 'Lo-fi beats, synthwave, rock, rap, and playlist exchanges.',
+        topic: 'Tracks & Playlists',
+        icon: '🎧',
+        isPrivate: false,
+        createdBy: 'LMK Bot 🤖',
+        lastMessage: {
+          text: 'Drop the song you are currently listening on repeat!',
+          sender: 'LMK Bot 🤖',
+          timestamp: new Date()
+        }
+      },
+      {
+        name: 'Memes & Random',
+        slug: 'memes-random',
+        description: 'Casual fun, hilarious memes, and random brainwaves.',
+        topic: 'Laughs & Banter',
+        icon: '🚀',
+        isPrivate: false,
+        createdBy: 'LMK Bot 🤖',
+        lastMessage: {
+          text: 'Share the top meme of your day right here.',
+          sender: 'LMK Bot 🤖',
+          timestamp: new Date()
+        }
       }
     ];
 
-    for (const p of samplePosts) {
-      await Post.create(p);
+    for (const roomData of defaultRooms) {
+      const room = await Room.create(roomData);
+
+      // Seed initial messages for each room
+      await Message.create({
+        room: room.slug,
+        sender: {
+          _id: botUser._id,
+          username: botUser.username,
+          avatar: botUser.avatar,
+          isGuest: false
+        },
+        text: `👋 Welcome to #${room.name}! Feel free to message here, invite others, and test real-time typing indicators.`,
+        reactions: [
+          { emoji: '👋', users: ['LMK Bot 🤖'] },
+          { emoji: '🔥', users: ['LMK Bot 🤖'] }
+        ],
+        status: 'delivered',
+        createdAt: new Date(Date.now() - 3600000)
+      });
     }
 
-    console.log(`✅ Created ${samplePosts.length} sample feed posts with likes & comments`);
-    console.log('🎉 Seed complete! Default login credentials:');
-    console.log('   Email: aarav@taskplanet.app | Password: Password123!');
-  } catch (error) {
-    console.error('Seed error:', error.message);
+    console.log('✅ Default rooms and starter messages seeded successfully!');
+  } catch (err) {
+    console.error('Error seeding data:', err);
   }
 };
 
 module.exports = { seedDatabase };
-
-if (require.main === module) {
-  seedDatabase().then(() => {
-    console.log('Done');
-    process.exit(0);
-  });
-}

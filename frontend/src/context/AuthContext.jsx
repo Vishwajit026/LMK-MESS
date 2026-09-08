@@ -1,102 +1,133 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authAPI } from '../services/api';
+import { authApi } from '../services/api';
+import { connectSocket, disconnectSocket } from '../services/socket';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem('taskplanet_token'));
-  const [loading, setLoading] = useState(true);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authModalTab, setAuthModalTab] = useState('login'); // 'login' | 'signup'
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('lmk_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [loading, setLoading] = useState(false);
+  const [authError, setAuthError] = useState(null);
 
-  // Initialize and verify existing token
   useEffect(() => {
     const initAuth = async () => {
-      const storedToken = localStorage.getItem('taskplanet_token');
-      if (storedToken) {
+      const token = localStorage.getItem('lmk_token');
+      if (token && !user) {
         try {
-          const res = await authAPI.getMe();
-          if (res.success && res.user) {
-            setUser(res.user);
-          } else {
-            logout();
+          const res = await authApi.getMe();
+          if (res.data.success) {
+            setUser(res.data.data);
+            localStorage.setItem('lmk_user', JSON.stringify(res.data.data));
+            connectSocket(res.data.data);
           }
-        } catch (error) {
-          console.error('Failed to restore session:', error);
-          logout();
+        } catch (err) {
+          localStorage.removeItem('lmk_token');
+          localStorage.removeItem('lmk_user');
+          setUser(null);
         }
+      } else if (user) {
+        connectSocket(user);
       }
-      setLoading(false);
     };
-
     initAuth();
   }, []);
 
-  const login = async (credentials) => {
+  const login = async (username, password) => {
+    setLoading(true);
+    setAuthError(null);
     try {
-      const res = await authAPI.login(credentials);
-      if (res.success && res.token) {
-        localStorage.setItem('taskplanet_token', res.token);
-        setToken(res.token);
-        setUser(res.user);
-        setAuthModalOpen(false);
-        return { success: true, message: res.message };
+      const res = await authApi.login({ username, password });
+      if (res.data.success) {
+        const userData = res.data.data;
+        setUser(userData);
+        localStorage.setItem('lmk_token', userData.token);
+        localStorage.setItem('lmk_user', JSON.stringify(userData));
+        connectSocket(userData);
+        return { success: true };
       }
-      return { success: false, message: res.message || 'Login failed' };
-    } catch (error) {
-      const msg = error.response?.data?.message || error.message || 'Login failed';
-      return { success: false, message: msg };
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Login failed. Check credentials.';
+      setAuthError(msg);
+      return { success: false, error: msg };
+    } finally {
+      setLoading(false);
     }
   };
 
-  const signup = async (userData) => {
+  const register = async (username, password, avatar, bio) => {
+    setLoading(true);
+    setAuthError(null);
     try {
-      const res = await authAPI.signup(userData);
-      if (res.success && res.token) {
-        localStorage.setItem('taskplanet_token', res.token);
-        setToken(res.token);
-        setUser(res.user);
-        setAuthModalOpen(false);
-        return { success: true, message: res.message };
+      const res = await authApi.register({ username, password, avatar, bio });
+      if (res.data.success) {
+        const userData = res.data.data;
+        setUser(userData);
+        localStorage.setItem('lmk_token', userData.token);
+        localStorage.setItem('lmk_user', JSON.stringify(userData));
+        connectSocket(userData);
+        return { success: true };
       }
-      return { success: false, message: res.message || 'Signup failed' };
-    } catch (error) {
-      const msg = error.response?.data?.message || error.message || 'Signup failed';
-      return { success: false, message: msg };
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Registration failed. Try a different username.';
+      setAuthError(msg);
+      return { success: false, error: msg };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const guestJoin = async (guestUsername, guestAvatar) => {
+    setLoading(true);
+    setAuthError(null);
+    try {
+      const res = await authApi.guestLogin({ username: guestUsername, avatar: guestAvatar });
+      if (res.data.success) {
+        const userData = res.data.data;
+        setUser(userData);
+        localStorage.setItem('lmk_token', userData.token);
+        localStorage.setItem('lmk_user', JSON.stringify(userData));
+        connectSocket(userData);
+        return { success: true };
+      }
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Guest join failed.';
+      setAuthError(msg);
+      return { success: false, error: msg };
+    } finally {
+      setLoading(false);
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('taskplanet_token');
-    setToken(null);
+    localStorage.removeItem('lmk_token');
+    localStorage.removeItem('lmk_user');
     setUser(null);
+    disconnectSocket();
   };
 
-  const openAuthModal = (tab = 'login') => {
-    setAuthModalTab(tab);
-    setAuthModalOpen(true);
-  };
-
-  const closeAuthModal = () => {
-    setAuthModalOpen(false);
+  const updateStatus = (newStatus) => {
+    if (!user) return;
+    const updated = { ...user, status: newStatus };
+    setUser(updated);
+    localStorage.setItem('lmk_user', JSON.stringify(updated));
+    connectSocket(updated);
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        token,
         loading,
-        isAuthenticated: !!user,
-        authModalOpen,
-        authModalTab,
+        authError,
+        setAuthError,
         login,
-        signup,
+        register,
+        guestJoin,
         logout,
-        openAuthModal,
-        closeAuthModal,
-        setAuthModalTab
+        updateStatus
       }}
     >
       {children}
@@ -104,10 +135,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);

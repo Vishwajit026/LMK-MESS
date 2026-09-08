@@ -1,183 +1,207 @@
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { JWT_SECRET } = require('../middleware/authMiddleware');
+const jwt = require('jsonwebtoken');
 
-// Helper to generate JWT Token
-const generateToken = (id) => {
-  return jwt.sign({ id }, JWT_SECRET, {
+const JWT_SECRET = process.env.JWT_SECRET || 'lmk_mess_super_secret_jwt_key_2026';
+
+const generateToken = (id, username, isGuest) => {
+  return jwt.sign({ id, username, isGuest }, JWT_SECRET, {
     expiresIn: '30d'
   });
 };
 
 // @desc    Register a new user
-// @route   POST /api/auth/signup
-// @access  Public
-const signup = async (req, res) => {
+// @route   POST /api/auth/register
+const registerUser = async (req, res) => {
   try {
-    const { name, username, email, password, avatar, bio } = req.body;
+    const { username, password, avatar, bio } = req.body;
 
-    if (!name || !username || !email || !password) {
+    if (!username || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide all required fields: name, username, email, and password.'
+        message: 'Username and password are required'
       });
     }
 
-    const cleanUsername = username.toLowerCase().trim();
-    const cleanEmail = email.toLowerCase().trim();
+    const cleanUsername = username.trim();
+    const userExists = await User.findOne({
+      username: { $regex: new RegExp(`^${cleanUsername}$`, 'i') }
+    });
 
-    // Check if email already registered
-    const emailExists = await User.findOne({ email: cleanEmail });
-    if (emailExists) {
+    if (userExists) {
       return res.status(400).json({
         success: false,
-        message: 'An account with this email already exists. Please log in instead.'
+        message: 'Username is already taken. Please choose another or login.'
       });
     }
 
-    // Check if username is taken
-    const usernameExists = await User.findOne({ username: cleanUsername });
-    if (usernameExists) {
-      return res.status(400).json({
-        success: false,
-        message: 'This username is already taken. Please choose another username.'
-      });
-    }
+    const defaultAvatar = avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(cleanUsername)}`;
 
-    // Default avatar if not provided
-    const defaultAvatar = avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${cleanUsername}`;
-
-    // Create user in MongoDB
     const user = await User.create({
-      name: name.trim(),
       username: cleanUsername,
-      email: cleanEmail,
       password,
       avatar: defaultAvatar,
-      bio: bio ? bio.trim() : 'TaskPlanet Community Member 🚀'
+      bio: bio || 'Chatting on LMK MESS 💬',
+      isGuest: false,
+      status: 'online'
     });
 
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user.username, false);
 
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
-      message: 'Account created successfully!',
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
+      data: {
+        _id: user._id,
         username: user.username,
-        email: user.email,
         avatar: user.avatar,
         bio: user.bio,
-        createdAt: user.createdAt
+        status: user.status,
+        isGuest: false,
+        token
       }
     });
-  } catch (error) {
-    console.error('Signup Error:', error);
-    return res.status(500).json({
+  } catch (err) {
+    console.error('Register error:', err);
+    res.status(500).json({
       success: false,
-      message: error.message || 'Server error occurred during account creation'
+      message: err.message || 'Server error during registration'
     });
   }
 };
 
-// @desc    Authenticate user and get token
+// @desc    Authenticate user & get token
 // @route   POST /api/auth/login
-// @access  Public
-const login = async (req, res) => {
+const loginUser = async (req, res) => {
   try {
-    const { identifier, email, username, password } = req.body;
-    const loginTarget = (identifier || email || username || '').toLowerCase().trim();
+    const { username, password } = req.body;
 
-    if (!loginTarget || !password) {
+    if (!username || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide your email/username and password.'
+        message: 'Username and password are required'
       });
     }
 
-    // Find by email or username
+    const cleanUsername = username.trim();
     const user = await User.findOne({
-      $or: [{ email: loginTarget }, { username: loginTarget }]
+      username: { $regex: new RegExp(`^${cleanUsername}$`, 'i') }
     });
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'No user account found with that email or username.'
+        message: 'Invalid username or password'
       });
     }
 
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials. Please check your password.'
+        message: 'Invalid username or password'
       });
     }
 
-    const token = generateToken(user._id);
+    user.lastSeen = new Date();
+    user.status = 'online';
+    await user.save();
 
-    return res.status(200).json({
+    const token = generateToken(user._id, user.username, user.isGuest);
+
+    res.json({
       success: true,
-      message: 'Logged in successfully!',
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
+      data: {
+        _id: user._id,
         username: user.username,
-        email: user.email,
         avatar: user.avatar,
         bio: user.bio,
-        createdAt: user.createdAt
+        status: user.status,
+        isGuest: user.isGuest,
+        token
       }
     });
-  } catch (error) {
-    console.error('Login Error:', error);
-    return res.status(500).json({
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({
       success: false,
-      message: error.message || 'Server error during login'
+      message: err.message || 'Server error during login'
     });
   }
 };
 
-// @desc    Get currently authenticated user
+// @desc    Instant Guest Join (No password needed)
+// @route   POST /api/auth/guest
+const guestLogin = async (req, res) => {
+  try {
+    const { username, avatar } = req.body;
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    const guestName = username ? `${username.trim()}` : `Guest_${randomSuffix}`;
+    const guestAvatar = avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(guestName)}`;
+
+    // Create or retrieve guest record
+    let user = await User.findOne({ username: guestName });
+    if (!user) {
+      user = await User.create({
+        username: guestName,
+        avatar: guestAvatar,
+        bio: 'Visiting as Guest 🚀',
+        isGuest: true,
+        status: 'online'
+      });
+    } else {
+      user.lastSeen = new Date();
+      user.status = 'online';
+      await user.save();
+    }
+
+    const token = generateToken(user._id, user.username, true);
+
+    res.json({
+      success: true,
+      data: {
+        _id: user._id,
+        username: user.username,
+        avatar: user.avatar,
+        bio: user.bio,
+        status: user.status,
+        isGuest: true,
+        token
+      }
+    });
+  } catch (err) {
+    console.error('Guest login error:', err);
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Server error during guest join'
+    });
+  }
+};
+
+// @desc    Get current user profile
 // @route   GET /api/auth/me
-// @access  Private
 const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select('-password');
+    const user = await User.findById(req.user.id).select('-password');
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User profile not found'
+        message: 'User not found'
       });
     }
-
-    return res.status(200).json({
+    res.json({
       success: true,
-      user: {
-        id: user._id,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        avatar: user.avatar,
-        bio: user.bio,
-        createdAt: user.createdAt
-      }
+      data: user
     });
-  } catch (error) {
-    console.error('GetMe Error:', error);
-    return res.status(500).json({
+  } catch (err) {
+    res.status(500).json({
       success: false,
-      message: 'Server error retrieving user data'
+      message: 'Server error'
     });
   }
 };
 
 module.exports = {
-  signup,
-  login,
+  registerUser,
+  loginUser,
+  guestLogin,
   getMe
 };

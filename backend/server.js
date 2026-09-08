@@ -1,13 +1,19 @@
+const path = require('path');
+const http = require('http');
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+
+// Load .env explicitly from backend directory
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+const { Server } = require('socket.io');
 const { connectDb } = require('./config/db');
 const { seedDatabase } = require('./utils/seedData');
-
-// Load environment variables
-dotenv.config();
+const { initializeChatSockets } = require('./sockets/chatSocket');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Enable CORS for frontend integration
@@ -19,22 +25,36 @@ app.use(
   })
 );
 
-// Body parser with 20MB limit for rich media & base64 image data
+// Initialize Socket.io with cross-origin support
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  },
+  pingTimeout: 60000,
+  pingInterval: 25000
+});
+
+// Pass Socket.io instance to the socket controller
+initializeChatSockets(io);
+
+// Body parser
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
 // Mount API routes
 const authRoutes = require('./routes/authRoutes');
-const postRoutes = require('./routes/postRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 app.use('/api/auth', authRoutes);
-app.use('/api/posts', postRoutes);
+app.use('/api', chatRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'online',
-    service: 'TaskPlanet Mini Social API',
+    app: 'LMK MESS',
+    service: 'LMK MESS Real-Time Chat API',
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
   });
@@ -42,7 +62,7 @@ app.get('/api/health', (req, res) => {
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('TaskPlanet Social Post Backend API is running! 🚀');
+  res.send('⚡ LMK MESS Real-Time Chat Server is running! 🚀');
 });
 
 // 404 Handler
@@ -62,21 +82,20 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start Server
-const startServer = async () => {
-  try {
-    const conn = await connectDb();
-    if (conn) {
-      await seedDatabase();
-    }
+// Start Server immediately and connect DB in background
+server.listen(PORT, () => {
+  console.log(`🚀 LMK MESS Server running at http://localhost:${PORT}`);
+  console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
+  console.log(`💬 Socket.io server ready for real-time chat!`);
 
-    app.listen(PORT, () => {
-      console.log(`🚀 TaskPlanet Social API running at http://localhost:${PORT}`);
-      console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
+  // Connect DB and seed
+  connectDb()
+    .then(async (conn) => {
+      if (conn) {
+        await seedDatabase();
+      }
+    })
+    .catch((err) => {
+      console.error('Database connection error:', err);
     });
-  } catch (err) {
-    console.error('Failed to start server:', err);
-  }
-};
-
-startServer();
+});

@@ -1,87 +1,38 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://mini-social-backend-9ys5.onrender.com/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
-// Request interceptor to attach JWT token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('taskplanet_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Response interceptor to catch unauthorized errors
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      // If token expired or invalid, clear local auth
-      const currentToken = localStorage.getItem('taskplanet_token');
-      if (currentToken && !error.config.url.includes('/login') && !error.config.url.includes('/signup')) {
-        console.warn('Session expired. Logging out...');
-      }
-    }
-    return Promise.reject(error);
+// Attach Authorization header if token exists
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('lmk_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-);
+  return config;
+});
 
-// Authentication API methods
-export const authAPI = {
-  signup: async (userData) => {
-    const res = await api.post('/auth/signup', userData);
-    return res.data;
-  },
-  login: async (credentials) => {
-    const res = await api.post('/auth/login', credentials);
-    return res.data;
-  },
-  getMe: async () => {
-    const res = await api.get('/auth/me');
-    return res.data;
-  }
+export const authApi = {
+  login: (credentials) => api.post('/auth/login', credentials),
+  register: (userData) => api.post('/auth/register', userData),
+  guestLogin: (guestData) => api.post('/auth/guest', guestData),
+  getMe: () => api.get('/auth/me')
 };
 
-// Social Posts API methods
-export const postAPI = {
-  getPosts: async (params = {}) => {
-    const res = await api.get('/posts', { params });
-    return res.data;
-  },
-  getPost: async (id) => {
-    const res = await api.get(`/posts/${id}`);
-    return res.data;
-  },
-  createPost: async (postData) => {
-    const res = await api.post('/posts', postData);
-    return res.data;
-  },
-  toggleLike: async (postId) => {
-    const res = await api.post(`/posts/${postId}/like`);
-    return res.data;
-  },
-  addComment: async (postId, commentData) => {
-    const res = await api.post(`/posts/${postId}/comment`, commentData);
-    return res.data;
-  },
-  deleteComment: async (postId, commentId) => {
-    const res = await api.delete(`/posts/${postId}/comments/${commentId}`);
-    return res.data;
-  },
-  deletePost: async (postId) => {
-    const res = await api.delete(`/posts/${postId}`);
-    return res.data;
-  }
+export const chatApi = {
+  getRooms: () => api.get('/rooms'),
+  getRoomBySlug: (slug) => api.get(`/rooms/${slug}`),
+  createRoom: (roomData) => api.post('/rooms', roomData),
+  getMessageHistory: (roomSlug, page = 1, limit = 100) =>
+    api.get(`/messages/${roomSlug}?page=${page}&limit=${limit}`),
+  searchMessages: (roomSlug, query) =>
+    api.get(`/messages/search/${roomSlug}?query=${encodeURIComponent(query)}`)
 };
 
 export default api;
