@@ -5,8 +5,8 @@ PROJECT SUBMISSION DETAILS & LINKS
 
 1. LIVE APPLICATION & SERVICES:
 --------------------------------------------------------------------------------
-• 🌐 Live Frontend URL (React Web):
-  https://temporary-swift-beryl-owpfpzx.vercel.app
+• 🌐 Live Frontend URL (React Web on Vercel):
+  https://lmk-mess.vercel.app
 
 • 🔧 Backend API & WebSockets (Node.js / Express / Socket.io on Render):
   https://lmk-mess-api.onrender.com
