@@ -1,42 +1,44 @@
 ================================================================================
-LMK MESS — FULL STACK REAL-TIME CHAT & ROOMS PLATFORM
-PROJECT SUBMISSION DETAILS & LINKS
+LMK MESS — FULL-STACK REAL-TIME CHAT & ROOMS APPLICATION
+TASK SUBMISSION DOCUMENT
 ================================================================================
 
-1. LIVE APPLICATION & SERVICES:
+1. LIVE PROJECT LINKS:
 --------------------------------------------------------------------------------
-• 🌐 Live Frontend URL (React Web on Vercel):
+• 🌐 Frontend Web Application (React.js on Vercel):
   https://lmk-mess.vercel.app
 
 • 🔧 Backend API & WebSockets (Node.js / Express / Socket.io on Render):
   https://lmk-mess-api.onrender.com
   Health Check: https://lmk-mess-api.onrender.com/api/health
-  Live Database: MongoDB Atlas (lmk_mess_db on cluster0.plbrcr3.mongodb.net)
 
-• 🗂️ Dedicated Public GitHub Repository:
+• 🗂️ GitHub Public Repository:
   https://github.com/Vishwajit026/LMK-MESS
-  - Frontend Code:  https://github.com/Vishwajit026/LMK-MESS/tree/main/frontend
-  - Backend Sockets:https://github.com/Vishwajit026/LMK-MESS/tree/main/backend
-  - Mobile App:     https://github.com/Vishwajit026/LMK-MESS/tree/main/mobile
+  - Frontend: https://github.com/Vishwajit026/LMK-MESS/tree/main/frontend
+  - Backend:  https://github.com/Vishwajit026/LMK-MESS/tree/main/backend
+  - Mobile:   https://github.com/Vishwajit026/LMK-MESS/tree/main/mobile
 
-• 📱 React Native CLI Mobile Client (Android):
-  GitHub Repository: https://github.com/Vishwajit026/LMK-MESS/tree/main/mobile
+• 🍃 MongoDB Atlas Cloud Database:
+  Cluster: cluster0.plbrcr3.mongodb.net
+  Database Name: lmk_mess_db
+  Connection URI: mongodb+srv://taskplanet_admin:TaskPlanet2026!Secure@cluster0.plbrcr3.mongodb.net/lmk_mess_db?retryWrites=true&w=majority
+
+• 📱 React Native CLI Mobile App (Android):
+  https://github.com/Vishwajit026/LMK-MESS/tree/main/mobile
   Quick Start: cd mobile && npm install && npx react-native run-android
 
 ================================================================================
-2. COMPREHENSIVE FEATURE HIGHLIGHTS:
+2. PROJECT OVERVIEW & CORE FEATURES:
 ================================================================================
-✓ 1-Click Instant Guest Join + User Sign Up / Log In with JWT Auth
-✓ Socket.io Sub-Millisecond Real-Time Messaging & Broadcast
-✓ Room Invite Codes (6-char), Password Protected Rooms & Direct Share Links
-✓ Channels (#general, #tech-talk, #gaming-lounge, #music-vibes, #memes-random)
-✓ 1-on-1 Direct Messaging (DMs) with Active Status Indicator
-✓ Live Active Presence Tracking per Room and Global Server
-✓ Dynamic Animated Typing Indicators ("User is typing...")
-✓ Emoji Message Reactions (👍, ❤️, 😂, 🔥, 🚀, 👏) with Live Counter Sync
-✓ Message Search & Cloud MongoDB Atlas Chat History Persistence
-✓ Pure Vanilla CSS Dark/Light Mode + Glassmorphism UI (Zero Tailwind / Zero Next.js)
-✓ Web Audio API Synthesized Audio Alerts for Message Sent / Received / User Join
-✓ 7/7 End-to-End Automated System Integration Tests Passing
+• Real-Time Messaging: Sub-millisecond communication powered by Socket.io.
+• Channel & Room System: Pre-seeded topics (#general, #tech-talk, #gaming, #music, #memes) + custom channel creation.
+• Room Protection & Share Links: 6-character room invite codes, shareable invite links, and password-protected private channels.
+• 1-on-1 Direct Messaging (DMs): Private instant messaging between users.
+• Live Online Presence Tracking: Active user counts per room and global member list.
+• Dynamic Typing Indicators: Real-time animated typing status.
+• Emoji Message Reactions: Interactive live-sync reactions (👍, ❤️, 😂, 🔥, 🚀, 👏).
+• Persistent Cloud Storage: MongoDB Atlas storage for message history & room metadata.
+• Modern Vanilla CSS Design: Responsive glassmorphism UI with Dark/Light mode and Web Audio synthesizer chimes (Strictly Zero Tailwind, Zero Next.js).
+• Automated Verification: 7/7 End-to-end integration tests passing.
 
 ================================================================================
