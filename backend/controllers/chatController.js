@@ -6,7 +6,7 @@ const User = require('../models/User');
 // @route   GET /api/rooms
 const getRooms = async (req, res) => {
   try {
-    const rooms = await Room.find().sort({ updatedAt: -1 }).lean();
+    const rooms = await Room.find().select('-password').sort({ updatedAt: -1 }).lean();
     res.json({
       success: true,
       count: rooms.length,
@@ -26,7 +26,7 @@ const getRooms = async (req, res) => {
 const getRoomBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
-    const room = await Room.findOne({ slug: slug.toLowerCase() });
+    const room = await Room.findOne({ slug: slug.toLowerCase() }).select('-password');
     if (!room) {
       return res.status(404).json({
         success: false,
@@ -45,11 +45,82 @@ const getRoomBySlug = async (req, res) => {
   }
 };
 
+// @desc    Get room by 6-char Invite Code
+// @route   GET /api/rooms/code/:inviteCode
+const getRoomByInviteCode = async (req, res) => {
+  try {
+    const { inviteCode } = req.params;
+    const room = await Room.findOne({ inviteCode: inviteCode.toUpperCase().trim() }).select('-password');
+    if (!room) {
+      return res.status(404).json({
+        success: false,
+        message: 'Invalid invite code or room does not exist'
+      });
+    }
+    res.json({
+      success: true,
+      data: room
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to find room by code'
+    });
+  }
+};
+
+// @desc    Verify password for protected room
+// @route   POST /api/rooms/verify-password
+const verifyRoomPassword = async (req, res) => {
+  try {
+    const { slug, password } = req.body;
+    const room = await Room.findOne({ slug: slug.toLowerCase() });
+    if (!room) {
+      return res.status(404).json({
+        success: false,
+        message: 'Room not found'
+      });
+    }
+
+    if (!room.isProtected || !room.password) {
+      return res.json({ success: true, authorized: true, data: room });
+    }
+
+    if (room.password === password) {
+      return res.json({
+        success: true,
+        authorized: true,
+        data: {
+          _id: room._id,
+          name: room.name,
+          slug: room.slug,
+          icon: room.icon,
+          topic: room.topic,
+          description: room.description,
+          isProtected: room.isProtected,
+          inviteCode: room.inviteCode
+        }
+      });
+    } else {
+      return res.status(401).json({
+        success: false,
+        authorized: false,
+        message: 'Incorrect room password / passcode'
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Password verification failed'
+    });
+  }
+};
+
 // @desc    Create new chat room
 // @route   POST /api/rooms
 const createRoom = async (req, res) => {
   try {
-    const { name, description, topic, icon, isPrivate } = req.body;
+    const { name, description, topic, icon, isPrivate, isProtected, password } = req.body;
 
     if (!name || name.trim().length === 0) {
       return res.status(400).json({
@@ -72,14 +143,18 @@ const createRoom = async (req, res) => {
     }
 
     const createdBy = req.user ? req.user.username : (req.body.createdBy || 'User');
+    const inviteCode = Room.generateInviteCode();
 
     const room = await Room.create({
       name: trimmedName,
       slug,
+      inviteCode,
       description: description || `Welcome to #${trimmedName}!`,
       topic: topic || 'Open Discussion',
       icon: icon || '💬',
       isPrivate: Boolean(isPrivate),
+      isProtected: Boolean(isProtected && password),
+      password: isProtected && password ? password.trim() : null,
       createdBy,
       lastMessage: {
         text: `Room created by ${createdBy}`,
@@ -96,13 +171,25 @@ const createRoom = async (req, res) => {
         avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=SystemBot',
         isGuest: false
       },
-      text: `🎉 Welcome to #${trimmedName}! Be kind and have fun chatting!`,
+      text: `🎉 Welcome to #${trimmedName}! Share invite link or Code "${inviteCode}" with friends to join!`,
       status: 'delivered'
     });
 
     res.status(201).json({
       success: true,
-      data: room
+      data: {
+        _id: room._id,
+        name: room.name,
+        slug: room.slug,
+        inviteCode: room.inviteCode,
+        description: room.description,
+        topic: room.topic,
+        icon: room.icon,
+        isPrivate: room.isPrivate,
+        isProtected: room.isProtected,
+        createdBy: room.createdBy,
+        lastMessage: room.lastMessage
+      }
     });
   } catch (err) {
     console.error('createRoom error:', err);
@@ -128,7 +215,6 @@ const getMessageHistory = async (req, res) => {
       .limit(limit)
       .lean();
 
-    // Return in ascending chronological order for chat view
     const chronologicalMessages = messages.reverse();
 
     res.json({
@@ -145,7 +231,7 @@ const getMessageHistory = async (req, res) => {
   }
 };
 
-// @desc    Search messages across a room or global
+// @desc    Search messages
 // @route   GET /api/messages/search/:roomSlug?query=abc
 const searchMessages = async (req, res) => {
   try {
@@ -188,6 +274,8 @@ const searchMessages = async (req, res) => {
 module.exports = {
   getRooms,
   getRoomBySlug,
+  getRoomByInviteCode,
+  verifyRoomPassword,
   createRoom,
   getMessageHistory,
   searchMessages

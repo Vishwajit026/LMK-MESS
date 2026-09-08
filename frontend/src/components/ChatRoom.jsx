@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { MessageItem } from './MessageItem';
 import { MessageInput } from './MessageInput';
 import { TypingIndicator } from './TypingIndicator';
+import { RoomInviteModal } from './RoomInviteModal';
 
 export const ChatRoom = ({ onOpenAuth }) => {
   const { user } = useAuth();
@@ -19,12 +20,12 @@ export const ChatRoom = ({ onOpenAuth }) => {
 
   const [searchInRoom, setSearchInRoom] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
 
   const messagesEndRef = useRef(null);
   const scrollContainerRef = useRef(null);
 
-  // Auto-scroll to bottom when messages change
   const scrollToBottom = (behavior = 'smooth') => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior, block: 'end' });
@@ -51,7 +52,6 @@ export const ChatRoom = ({ onOpenAuth }) => {
     );
   }
 
-  // Filter messages by search if search bar is active
   const displayedMessages = showSearch && searchInRoom.trim()
     ? messages.filter((m) =>
         m.text?.toLowerCase().includes(searchInRoom.toLowerCase()) ||
@@ -61,7 +61,6 @@ export const ChatRoom = ({ onOpenAuth }) => {
 
   const roomOnlineCount = onlineUsers.roomUsers?.length || 1;
 
-  // Helper to format date divider
   const formatDateDivider = (dateString) => {
     if (!dateString) return 'Today';
     const date = new Date(dateString);
@@ -100,12 +99,22 @@ export const ChatRoom = ({ onOpenAuth }) => {
               <span className="chat-room-emoji">{activeRoom.icon || '💬'}</span>
               <h1 className="chat-room-name">#{activeRoom.name}</h1>
               {activeRoom.isDirect && <span className="badge-direct">DIRECT</span>}
+              {activeRoom.isProtected && <span className="badge-protected" title="Password Protected">🔒 LOCKED</span>}
             </div>
             <p className="chat-room-topic">{activeRoom.topic || activeRoom.description}</p>
           </div>
         </div>
 
         <div className="chat-header-actions">
+          {/* Invite / Share Button */}
+          <button
+            className="btn btn-secondary btn-sm invite-btn"
+            onClick={() => setShowInviteModal(true)}
+            title="Invite Friends to this room"
+          >
+            <span>🔗</span> <span className="desktop-only">Invite</span>
+          </button>
+
           {/* Search Toggle */}
           <button
             className={`icon-btn ${showSearch ? 'active' : ''}`}
@@ -169,9 +178,13 @@ export const ChatRoom = ({ onOpenAuth }) => {
             {activeRoom.description || `This is the start of the #${activeRoom.name} channel.`}
           </p>
           <div className="hero-badges">
-            <span className="hero-tag">🔒 End-to-End Real-Time</span>
-            <span className="hero-tag">⚡ Socket.io Powered</span>
-            <span className="hero-tag">💾 MongoDB Persistent History</span>
+            <span className="hero-tag">🔒 Real-Time Sockets</span>
+            <span className="hero-tag">💾 Persistent History</span>
+            {activeRoom.inviteCode && (
+              <span className="hero-tag hero-tag-code" onClick={() => setShowInviteModal(true)}>
+                🔑 Invite Code: <strong>{activeRoom.inviteCode}</strong> (Click to copy)
+              </span>
+            )}
           </div>
         </div>
 
@@ -231,6 +244,13 @@ export const ChatRoom = ({ onOpenAuth }) => {
           </div>
         </div>
       )}
+
+      {/* Room Invite Modal */}
+      <RoomInviteModal
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        room={activeRoom}
+      />
     </div>
   );
 };

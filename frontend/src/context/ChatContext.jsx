@@ -50,10 +50,22 @@ export const ChatProvider = ({ children }) => {
       const res = await chatApi.getRooms();
       if (res.data.success) {
         setRooms(res.data.data);
-        // Set default room if none active
+
+        // Check URL query parameters: ?room=slug or ?code=code for direct invites
+        const params = new URLSearchParams(window.location.search);
+        const targetSlug = params.get('room');
+        const targetCode = params.get('code');
+
+        let target = null;
+        if (targetSlug) {
+          target = res.data.data.find((r) => r.slug.toLowerCase() === targetSlug.toLowerCase());
+        } else if (targetCode) {
+          target = res.data.data.find((r) => r.inviteCode?.toUpperCase() === targetCode.toUpperCase());
+        }
+
         if (!activeRoomRef.current && res.data.data.length > 0) {
-          const general = res.data.data.find((r) => r.slug === 'general') || res.data.data[0];
-          setActiveRoom(general);
+          const defaultRoom = target || res.data.data.find((r) => r.slug === 'general') || res.data.data[0];
+          setActiveRoom(defaultRoom);
         }
       }
     } catch (err) {

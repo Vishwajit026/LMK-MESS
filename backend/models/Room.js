@@ -15,6 +15,13 @@ const roomSchema = new mongoose.Schema(
       trim: true,
       lowercase: true
     },
+    inviteCode: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+      uppercase: true
+    },
     description: {
       type: String,
       default: '',
@@ -31,6 +38,14 @@ const roomSchema = new mongoose.Schema(
     isPrivate: {
       type: Boolean,
       default: false
+    },
+    isProtected: {
+      type: Boolean,
+      default: false
+    },
+    password: {
+      type: String,
+      default: null
     },
     isDirect: {
       type: Boolean,
@@ -65,6 +80,16 @@ roomSchema.statics.generateSlug = function (name) {
     .replace(/[^a-z0-9-_]/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
+};
+
+// Helper to generate 6-character short invite code
+roomSchema.statics.generateInviteCode = function () {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
 };
 
 module.exports = mongoose.model('Room', roomSchema);

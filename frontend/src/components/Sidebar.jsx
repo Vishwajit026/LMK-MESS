@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useChat } from '../context/ChatContext';
 import { useAuth } from '../context/AuthContext';
 
-export const Sidebar = ({ onOpenCreateRoom, onOpenAuth }) => {
+export const Sidebar = ({ onOpenCreateRoom, onOpenAuth, onOpenJoinCode }) => {
   const {
     rooms,
     activeRoom,
@@ -19,7 +19,8 @@ export const Sidebar = ({ onOpenCreateRoom, onOpenAuth }) => {
   const filteredRooms = rooms.filter((room) => {
     const matchesSearch =
       room.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      room.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      room.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      room.inviteCode?.toLowerCase().includes(searchTerm.toLowerCase());
 
     if (!matchesSearch) return false;
 
@@ -46,20 +47,29 @@ export const Sidebar = ({ onOpenCreateRoom, onOpenAuth }) => {
         <div className="sidebar-header">
           <div className="sidebar-title-row">
             <span className="sidebar-section-title">Rooms & Channels</span>
-            <button
-              className="btn-create-icon"
-              onClick={onOpenCreateRoom}
-              title="Create new room"
-            >
-              +
-            </button>
+            <div className="sidebar-header-actions">
+              <button
+                className="btn-join-code-icon"
+                onClick={onOpenJoinCode}
+                title="Join room with Code / Passcode"
+              >
+                🔑
+              </button>
+              <button
+                className="btn-create-icon"
+                onClick={onOpenCreateRoom}
+                title="Create new room"
+              >
+                +
+              </button>
+            </div>
           </div>
 
           <div className="search-box">
             <span className="search-icon">🔍</span>
             <input
               type="text"
-              placeholder="Search rooms or chats..."
+              placeholder="Search or enter code..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
@@ -100,10 +110,10 @@ export const Sidebar = ({ onOpenCreateRoom, onOpenAuth }) => {
           {(activeTab === 'all' || activeTab === 'rooms') && (
             <div className="room-category-group">
               <div className="category-header">
-                <span>PUBLIC ROOMS ({publicRooms.length})</span>
+                <span>CHANNELS ({publicRooms.length})</span>
               </div>
               {publicRooms.length === 0 ? (
-                <div className="empty-rooms-hint">No matching rooms found</div>
+                <div className="empty-rooms-hint">No matching channels found</div>
               ) : (
                 publicRooms.map((room) => {
                   const isActive = activeRoom?.slug === room.slug;
@@ -120,7 +130,10 @@ export const Sidebar = ({ onOpenCreateRoom, onOpenAuth }) => {
                       </div>
                       <div className="room-details">
                         <div className="room-name-row">
-                          <span className="room-name">#{room.name}</span>
+                          <div className="room-title-with-lock">
+                            <span className="room-name">#{room.name}</span>
+                            {room.isProtected && <span className="lock-icon" title="Password Protected">🔒</span>}
+                          </div>
                           {room.lastMessage?.timestamp && (
                             <span className="room-time">
                               {new Date(room.lastMessage.timestamp).toLocaleTimeString([], {

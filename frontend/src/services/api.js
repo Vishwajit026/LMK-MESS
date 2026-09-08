@@ -9,7 +9,6 @@ const api = axios.create({
   }
 });
 
-// Attach Authorization header if token exists
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('lmk_token');
   if (token) {
@@ -28,6 +27,8 @@ export const authApi = {
 export const chatApi = {
   getRooms: () => api.get('/rooms'),
   getRoomBySlug: (slug) => api.get(`/rooms/${slug}`),
+  getRoomByCode: (code) => api.get(`/rooms/code/${code}`),
+  verifyPassword: (slug, password) => api.post('/rooms/verify-password', { slug, password }),
   createRoom: (roomData) => api.post('/rooms', roomData),
   getMessageHistory: (roomSlug, page = 1, limit = 100) =>
     api.get(`/messages/${roomSlug}?page=${page}&limit=${limit}`),

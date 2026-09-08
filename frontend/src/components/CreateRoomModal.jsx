@@ -9,7 +9,8 @@ export const CreateRoomModal = ({ isOpen, onClose }) => {
   const [description, setDescription] = useState('');
   const [topic, setTopic] = useState('');
   const [icon, setIcon] = useState('💬');
-  const [isPrivate, setIsPrivate] = useState(false);
+  const [isProtected, setIsProtected] = useState(false);
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -28,6 +29,11 @@ export const CreateRoomModal = ({ isOpen, onClose }) => {
       return;
     }
 
+    if (isProtected && !password.trim()) {
+      setError('Please provide a passcode for the protected room');
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 
@@ -36,7 +42,8 @@ export const CreateRoomModal = ({ isOpen, onClose }) => {
       description: description.trim(),
       topic: topic.trim() || 'General Chat',
       icon,
-      isPrivate
+      isProtected,
+      password: isProtected ? password.trim() : null
     });
 
     setIsSubmitting(false);
@@ -46,6 +53,8 @@ export const CreateRoomModal = ({ isOpen, onClose }) => {
       setDescription('');
       setTopic('');
       setIcon('💬');
+      setIsProtected(false);
+      setPassword('');
       onClose();
     } else {
       setError(result.error);
@@ -60,7 +69,7 @@ export const CreateRoomModal = ({ isOpen, onClose }) => {
             <span className="modal-icon-badge">➕</span>
             <div>
               <h2 className="modal-title">Create Chat Room</h2>
-              <p className="modal-subtitle">Start a new public or private topic channel</p>
+              <p className="modal-subtitle">Start a new public or passcode-protected channel</p>
             </div>
           </div>
           <button className="modal-close-btn" onClick={onClose}>
@@ -78,7 +87,7 @@ export const CreateRoomModal = ({ isOpen, onClose }) => {
               <span className="input-prefix">#</span>
               <input
                 type="text"
-                placeholder="e.g. ai-developers, movie-club"
+                placeholder="e.g. secret-squad, ai-lounge"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 maxLength={40}
@@ -111,12 +120,42 @@ export const CreateRoomModal = ({ isOpen, onClose }) => {
             <label className="form-label">Topic / Headline</label>
             <input
               type="text"
-              placeholder="e.g. Chat about latest AI models and prompt engineering"
+              placeholder="e.g. Chat about latest tech, gaming, or private ideas"
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
               maxLength={60}
               className="form-input"
             />
+          </div>
+
+          {/* Password Protection Toggle */}
+          <div className="form-group">
+            <div className="checkbox-toggle-row">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={isProtected}
+                  onChange={(e) => setIsProtected(e.target.checked)}
+                />
+                <span>🔒 Protect Room with Passcode / Password</span>
+              </label>
+            </div>
+
+            {isProtected && (
+              <div className="password-input-reveal">
+                <input
+                  type="password"
+                  placeholder="Set room password (e.g. 1234 or secret123)"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="form-input"
+                  required
+                />
+                <span className="slug-preview">
+                  Friends will need to enter this password to join the room.
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Description */}

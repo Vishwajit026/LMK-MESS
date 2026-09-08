@@ -1950,3 +1950,151 @@ body {
     padding: 8px 12px 12px;
   }
 }
+
+/* ==========================================================================
+   Invite & Passcode Protection Enhancements
+   ========================================================================== */
+.sidebar-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-join-code-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-join-code-icon:hover {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+.room-title-with-lock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lock-icon {
+  font-size: 11px;
+}
+
+.badge-protected {
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--color-busy);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.5px;
+}
+
+.invite-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px !important;
+  font-size: 0.8rem !important;
+  border-radius: var(--radius-full) !important;
+  background: rgba(99, 102, 241, 0.15) !important;
+  border: 1px solid rgba(99, 102, 241, 0.3) !important;
+  color: var(--brand-primary) !important;
+}
+
+.invite-btn:hover {
+  background: var(--brand-primary) !important;
+  color: white !important;
+}
+
+.invite-code-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+}
+
+.invite-code-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--brand-primary);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.protected-alert-banner {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.checkbox-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  user-select: none;
+}
+
+.checkbox-label input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--brand-primary);
+  cursor: pointer;
+}
+
+.password-input-reveal {
+  margin-top: 8px;
+  animation: slide-down 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-tag-code {
+  cursor: pointer;
+  background: rgba(99, 102, 241, 0.2) !important;
+  border-color: var(--brand-primary) !important;
+  color: var(--brand-primary) !important;
+}
+
+.hero-tag-code:hover {
+  background: var(--brand-primary) !important;
+  color: white !important;
+}
+
