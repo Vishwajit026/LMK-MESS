@@ -3,35 +3,40 @@
                           SUBMISSION DOCUMENT
 ================================================================================
 
-1. SUBMISSION LINKS
+1. LIVE SUBMISSION LINKS
 --------------------------------------------------------------------------------
-• 🌐 Frontend URL (React Web):
-  https://lmk-mess-web.vercel.app  (or https://lmk-mess.netlify.app)
+• 🌐 Live Frontend URL (React Web - Deployed & Active):
+  https://temporary-swift-beryl-owpfpzx.vercel.app
+  (Permanent Claim: https://vercel.com/claim-deployment?code=bf955538-7b50-4bef-8491-11eb4d1f3898)
   Local Development: http://localhost:5173
 
 • 🔧 Backend URL (Node.js / Express / Socket.io):
-  https://lmk-mess-api.onrender.com  (or https://lmk-mess-server.vercel.app)
+  https://mini-social-backend-9ys5.onrender.com
   Health Check: http://localhost:5000/api/health
+  Cloud Database: MongoDB Atlas (lmk_mess_db on cluster0.plbrcr3.mongodb.net)
 
-• 🗂️ Public GitHub Repositories:
-  - Main Project (Monorepo): https://github.com/Vishwajit026/LMK-MESS
-  - Frontend (React):        https://github.com/Vishwajit026/LMK-MESS/tree/main/frontend
-  - Backend (Node/Socket.io):https://github.com/Vishwajit026/LMK-MESS/tree/main/backend
-  - Mobile (React Native):   https://github.com/Vishwajit026/LMK-MESS/tree/main/mobile
+• 🗂️ Public GitHub Repository:
+  https://github.com/Vishwajit026/Mini-social
+  - Frontend Code:  https://github.com/Vishwajit026/Mini-social/tree/main/frontend
+  - Backend Sockets:https://github.com/Vishwajit026/Mini-social/tree/main/backend
+  - Mobile App:     https://github.com/Vishwajit026/Mini-social/tree/main/mobile
 
 • 📱 (Optional) Mobile App (React Native CLI - Android):
-  Repository Link: https://github.com/Vishwajit026/LMK-MESS/tree/main/mobile
-  APK Build Output: mobile/android/app/build/outputs/apk/release/app-release.apk
+  GitHub Repository: https://github.com/Vishwajit026/Mini-social/tree/main/mobile
+  Build Instructions:
+  1. cd mobile && npm install
+  2. npm run android
+  (Release APK output: mobile/android/app/build/outputs/apk/release/app-release.apk)
 
 
 2. TECH STACK (STRICT COMPLIANCE)
 --------------------------------------------------------------------------------
-• Backend: Node.js (Express.js), Socket.io, Mongoose (MongoDB)
+• Backend: Node.js (Express.js), Socket.io, Mongoose (MongoDB Atlas)
 • Frontend (Web): React.js (Vite), Socket.io-client, Pure Vanilla CSS
   ❌ Strictly NO Next.js
   ❌ Strictly NO Tailwind CSS
 • Mobile: React Native CLI (Android-ready with Socket.io client)
-• Database: MongoDB (with Mongoose & automatic local memory fallback)
+• Database: MongoDB Atlas (Live Cloud Collections: `rooms`, `messages`, `users`)
 • Sound: Web Audio API (Synthesized in-browser sound effects for sends/receives)
 
 
