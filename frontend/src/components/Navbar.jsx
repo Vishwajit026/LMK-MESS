@@ -38,7 +38,7 @@ export const Navbar = ({ onOpenAuth, onOpenCreateRoom }) => {
           <div className="brand-logo-icon">⚡</div>
           <div className="brand-text">
             <span className="brand-name">LMK MESS</span>
-            <span className="brand-tag">v2.0 • Real-Time</span>
+            <span className="brand-tag">Real-Time</span>
           </div>
         </div>
 
