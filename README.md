@@ -1,15 +1,25 @@
 # ⚡ LMK MESS — Real-Time Chat & Rooms Application
 
-A high-performance, modern real-time chat application built with **Node.js**, **Express**, **Socket.io**, **React.js** (Vanilla CSS), **MongoDB**, and **React Native CLI** (Mobile).
+A high-performance, modern real-time chat application built with **Node.js**, **Express**, **Socket.io**, **React.js** (Vanilla CSS), **MongoDB Atlas**, and **React Native CLI** (Mobile).
+
+---
+
+## 🌐 Live Application & Links
+
+- **Frontend Web (Vercel)**: [https://lmk-mess.vercel.app](https://lmk-mess.vercel.app)
+- **Backend API & WebSockets (Render)**: [https://lmk-mess-api.onrender.com](https://lmk-mess-api.onrender.com)
+- **Backend Health Check**: [https://lmk-mess-api.onrender.com/api/health](https://lmk-mess-api.onrender.com/api/health)
+- **Public GitHub Repository**: [https://github.com/Vishwajit026/LMK-MESS](https://github.com/Vishwajit026/LMK-MESS)
+- **React Native Mobile App**: [https://github.com/Vishwajit026/LMK-MESS/tree/main/mobile](https://github.com/Vishwajit026/LMK-MESS/tree/main/mobile)
 
 ---
 
 ## 🧰 Tech Stack
-- **Backend**: Node.js, Express.js, Socket.io, MongoDB (Mongoose with auto-embedded fallback)
+- **Backend**: Node.js, Express.js, Socket.io, MongoDB Atlas (Mongoose)
 - **Frontend (Web)**: React.js (Vite), Socket.io-client, Vanilla CSS (Strictly **No Tailwind**, **No Next.js**)
 - **Mobile Client**: React Native CLI (Android-ready)
 - **Real-Time Engine**: Socket.io bidirectional WebSocket communication
-- **Design System**: Glassmorphism, Dark/Light theme toggle, Web Audio API sound synthesis, WhatsApp/Discord-inspired layout
+- **Design System**: Glassmorphism, Dark/Light theme toggle, Web Audio API sound synthesis, Discord/Slack-inspired layout
 
 ---
 
@@ -22,8 +32,9 @@ A high-performance, modern real-time chat application built with **Node.js**, **
 
 ### 💬 Real-Time Messaging & Rooms
 - **Instant Messaging**: Messages broadcasted in sub-millisecond real-time via Socket.io.
-- **Independent Channels**: Switch between `#general`, `#tech-talk`, `#gaming-lounge`, `#music-vibes`, `#memes-random`, and custom rooms.
-- **Direct 1-on-1 Messages (DMs)**: Private chat channels between any two users.
+- **Room Invite Codes & Password Protection**: 6-character room codes (`#TECH-1A2B`), direct invite URLs (`?code=XXXXXX`), and password/PIN protected private rooms.
+- **Independent Channels**: Switch between `#general`, `#tech-talk`, `#gaming-lounge`, `#music-vibes`, `#memes-random`, and custom created channels.
+- **Direct 1-on-1 Messages (DMs)**: Private chat channels between any two users with live status indicators.
 - **Dynamic Typing Indicators**: Animated bouncing pill showing "*User is typing...*" in real-time.
 - **Message Reactions**: Expressive emoji reactions (👍, ❤️, 😂, 🔥, 🚀, 👏) with instant multi-client sync.
 - **Media Attachments**: Share images and screenshots directly in the chat feed.
@@ -31,7 +42,7 @@ A high-performance, modern real-time chat application built with **Node.js**, **
 - **In-App Audio Chimes**: Synthesized pop and receive chimes via Web Audio API (toggleable 🔔/🔕).
 
 ### 🕓 Persistent MongoDB Chat History
-- All room messages and direct chats are stored in MongoDB.
+- All room messages and direct chats are stored in MongoDB Atlas (`lmk_mess_db`).
 - History loads automatically upon joining any room or refreshing the application.
 - In-room search bar for querying past conversations.
 
@@ -44,7 +55,7 @@ A high-performance, modern real-time chat application built with **Node.js**, **
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started Locally
 
 ### 1. Prerequisites
 - Node.js (v18+)
@@ -80,8 +91,8 @@ node backend/test_chat_suite.js
 ---
 
 ## 📤 Submission Checklist
-- [x] **Frontend Web**: React.js with pure Vanilla CSS, Socket.io-client, responsive design.
-- [x] **Backend API**: Node.js, Express, Socket.io, MongoDB integration.
+- [x] **Frontend Web**: React.js with pure Vanilla CSS, Socket.io-client, responsive design ([https://lmk-mess.vercel.app](https://lmk-mess.vercel.app)).
+- [x] **Backend API**: Node.js, Express, Socket.io, MongoDB integration ([https://lmk-mess-api.onrender.com](https://lmk-mess-api.onrender.com)).
 - [x] **Real-time Events**: `joinRoom`, `chatMessage`, `typing`, `onlineUsers`, `messageReaction`, `directMessage`.
-- [x] **Chat History**: Persisted in MongoDB and loaded on room join.
+- [x] **Chat History**: Persisted in MongoDB Atlas and loaded on room join.
 - [x] **Mobile App**: Complete React Native CLI project in `mobile/` directory.
